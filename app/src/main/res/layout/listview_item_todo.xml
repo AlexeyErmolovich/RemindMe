@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/listview_item_padding">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include layout="@layout/listview_item_header" />
+
+            <include layout="@layout/listview_item_buttonmenu" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/listview_item_marginLeft"
+            android:layout_marginRight="@dimen/listview_item_marginRight"
+            android:layout_marginTop="@dimen/listview_item_margin">
+
+            <ListView
+                android:id="@+id/listview_todo_items"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginRight="70dp"
+                android:scrollbars="vertical" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/listview_todo_items"
+                android:layout_alignParentRight="true"
+                android:text="@string/tab_item_todo"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/colorTodoDark"
+                android:textSize="@dimen/listview_item_textSize" />
+
+        </RelativeLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/listview_item_line_height"
+            android:layout_marginTop="@dimen/listview_item_margin"
+            android:background="@color/colorGrey" />
+
+        <RelativeLayout
+            android:layout_width="@dimen/listview_item_block_width"
+            android:layout_height="@dimen/listview_item_block_height"
+            android:layout_marginBottom="@dimen/listview_item_margin"
+            android:layout_marginLeft="@dimen/listview_item_marginLeft"
+            android:layout_marginTop="@dimen/listview_item_margin"
+            android:background="@color/colorTodo">
+
+            <TextView
+                android:id="@+id/textKeyword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="Keyword"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/colorTodoDark"
+                android:textSize="@dimen/listview_item_textSize" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

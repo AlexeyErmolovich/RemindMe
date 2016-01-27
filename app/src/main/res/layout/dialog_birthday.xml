@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="com.myproject.remindme.activity.AddBirthdayActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_birthdays"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/add_item_marginBottom"
+        android:background="@color/colorBirthdays" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/editFirstNmae"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/add_item_marginLeft"
+            android:layout_marginRight="@dimen/add_item_marginRight"
+            android:layout_marginTop="@dimen/add_item_marginTop"
+            android:ems="10"
+            android:hint="@string/first_name"
+            android:inputType="textPersonName" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/editLargeNmae"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/add_item_marginLeft"
+            android:layout_marginRight="@dimen/add_item_marginRight"
+            android:layout_marginTop="@dimen/add_item_marginTop"
+            android:ems="10"
+            android:hint="@string/large_name"
+            android:inputType="textPersonName" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/editBirthday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/add_item_marginLeft"
+            android:layout_marginRight="@dimen/add_item_marginRight"
+            android:layout_marginTop="@dimen/add_item_marginTop"
+            android:ems="10"
+            android:hint="@string/birthday"
+            android:inputType="date" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <AutoCompleteTextView
+            android:id="@+id/editRelationship"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/add_item_marginLeft"
+            android:layout_marginRight="@dimen/add_item_marginRight"
+            android:layout_marginTop="@dimen/add_item_marginTop"
+            android:ems="10"
+            android:hint="@string/relationship"
+            android:inputType="textAutoComplete" />
+
+    </android.support.design.widget.TextInputLayout>
+
+</LinearLayout>

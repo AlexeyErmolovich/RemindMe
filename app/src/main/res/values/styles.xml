@@ -1,0 +1,18 @@
+<resources>
+
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar"/>
+
+    <style name="AppDefault" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorControlNormal">@color/colorWhite</item>
+    </style>
+
+    <style name="menu_label_style">
+        <item name="android:background">@drawable/fab_action_button</item>
+        <item name="android:textColor">#fafafa</item>
+    </style>
+
+</resources>

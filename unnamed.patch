@@ -1,0 +1,1703 @@
+Index: .idea/inspectionProfiles/Project_Default.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/inspectionProfiles/Project_Default.xml	(date 1453366587000)
++++ .idea/inspectionProfiles/Project_Default.xml	(date 1453410115000)
+@@ -2,7 +2,9 @@
+   <profile version="1.0">
+     <option name="myName" value="Project Default" />
+     <inspection_tool class="AndroidLintRecycle" enabled="false" level="WARNING" enabled_by_default="false" />
++    <inspection_tool class="AndroidLintRtlHardcoded" enabled="false" level="WARNING" enabled_by_default="false" />
+     <inspection_tool class="AndroidLintSetTextI18n" enabled="false" level="WARNING" enabled_by_default="false" />
++    <inspection_tool class="AndroidLintSpUsage" enabled="false" level="WARNING" enabled_by_default="false" />
+     <inspection_tool class="LoggerInitializedWithForeignClass" enabled="false" level="WARNING" enabled_by_default="false">
+       <option name="loggerClassName" value="org.apache.log4j.Logger,org.slf4j.LoggerFactory,org.apache.commons.logging.LogFactory,java.util.logging.Logger" />
+       <option name="loggerFactoryMethodName" value="getLogger,getLogger,getLog,getLogger" />
+\ No newline at end of file
+Index: android/support/v4/app/annotations.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- android/support/v4/app/annotations.xml	(date 1453410115000)
++++ android/support/v4/app/annotations.xml	(date 1453410115000)
+@@ -0,0 +1,1 @@
++<root></root>
+\ No newline at end of file
+Index: app/src/main/java/com/myproject/remindme/Constants.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/myproject/remindme/Constants.java	(date 1453366587000)
++++ app/src/main/java/com/myproject/remindme/Constants.java	(date 1453410115000)
+@@ -4,11 +4,10 @@
+  * Created by Алексей on 14/01/2016.
+  */
+ public class Constants {
+-    public static final int TAB_HISTORY = 0;
+     public static final int TAB_IDEAS = 1;
+     public static final int TAB_TODO = 2;
+     public static final int TAB_BIRTHDAYS = 3;
+ 
+-    public static final int DATABASE_VERSION = 1;
++    public static final int DATABASE_VERSION = 2;
+     public static final String DATABASE_NAME = "RemindMe";
+ }
+Index: app/src/main/java/com/myproject/remindme/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/myproject/remindme/MainActivity.java	(date 1453366587000)
++++ app/src/main/java/com/myproject/remindme/MainActivity.java	(date 1453410115000)
+@@ -19,6 +19,7 @@
+ import com.myproject.remindme.adapter.TabsPagerFragmentAdapter;
+ import com.myproject.remindme.database.data.AbstractData;
+ import com.myproject.remindme.dialog.BirthdayDialog;
++import com.myproject.remindme.dialog.IdeaDialog;
+ import com.myproject.remindme.eventbus.BirthdaysChangeEvent;
+ import com.myproject.remindme.eventbus.BusProvider;
+ import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+@@ -127,6 +128,9 @@
+                 actionsMenu.close(true);
+ 
+                 showTab(Constants.TAB_IDEAS);
++
++                IdeaDialog dialog =new IdeaDialog(IdeaDialog.IDEA_ADD);
++                dialog.show(getFragmentManager(), IdeaDialog.TAG);
+             }
+         });
+         return btnTodo;
+Index: app/src/main/java/com/myproject/remindme/adapter/TabsPagerFragmentAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/myproject/remindme/adapter/TabsPagerFragmentAdapter.java	(date 1453366587000)
++++ app/src/main/java/com/myproject/remindme/adapter/TabsPagerFragmentAdapter.java	(date 1453410115000)
+@@ -7,7 +7,6 @@
+ 
+ import com.myproject.remindme.fragment.AbstractTabFragment;
+ import com.myproject.remindme.fragment.BirthdaysFragment;
+-import com.myproject.remindme.fragment.HistoryFragment;
+ import com.myproject.remindme.fragment.IdeasFragment;
+ import com.myproject.remindme.fragment.TodoFragment;
+ 
+@@ -43,9 +42,8 @@
+ 
+     private void initTabsMap(Context context) {
+         tabs = new HashMap<>();
+-        tabs.put(0, HistoryFragment.getInstance(context));
+-        tabs.put(1, IdeasFragment.getInstance(context));
+-        tabs.put(2, TodoFragment.getInstance(context));
+-        tabs.put(3, BirthdaysFragment.getInstance(context));
++        tabs.put(0, IdeasFragment.getInstance(context));
++        tabs.put(1, TodoFragment.getInstance(context));
++        tabs.put(2, BirthdaysFragment.getInstance(context));
+     }
+ }
+Index: app/src/main/java/com/myproject/remindme/adapter/data/BirthdaysAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/myproject/remindme/adapter/data/BirthdaysAdapter.java	(date 1453366587000)
++++ app/src/main/java/com/myproject/remindme/adapter/data/BirthdaysAdapter.java	(date 1453410115000)
+@@ -119,6 +119,7 @@
+         popupMenu.getMenuInflater().inflate(R.menu.menu_listview, popupMenu.getMenu());
+ 
+         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
++            @SuppressWarnings("ConstantConditions")
+             @Override
+             public boolean onMenuItemClick(MenuItem item) {
+                 Birthday birthday = (Birthday) getItem(v.getId());
+Index: app/src/main/java/com/myproject/remindme/adapter/data/IdeasAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/myproject/remindme/adapter/data/IdeasAdapter.java	(date 1453410115000)
++++ app/src/main/java/com/myproject/remindme/adapter/data/IdeasAdapter.java	(date 1453410115000)
+@@ -0,0 +1,144 @@
++package com.myproject.remindme.adapter.data;
++
++import android.content.Context;
++import android.support.v4.app.FragmentActivity;
++import android.support.v7.widget.PopupMenu;
++import android.view.LayoutInflater;
++import android.view.MenuItem;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.ImageButton;
++import android.widget.TextView;
++
++import com.myproject.remindme.R;
++import com.myproject.remindme.database.data.AbstractData;
++import com.myproject.remindme.database.data.Idea;
++import com.myproject.remindme.dialog.IdeaDialog;
++import com.myproject.remindme.eventbus.BusProvider;
++import com.myproject.remindme.eventbus.IdeasChangeEvent;
++
++import java.util.ArrayList;
++import java.util.List;
++
++import static com.myproject.remindme.dialog.IdeaDialog.IDEA_REVISE;
++
++/**
++ * Created by Alexey on 1/21/2016.
++ */
++public class IdeasAdapter extends AbstractAdapter {
++
++    private List<Idea> ideaList;
++    private List<Idea> drawableList;
++    private View.OnClickListener onClickListener = new View.OnClickListener() {
++        @Override
++        public void onClick(View v) {
++            showPopupMenu(v);
++        }
++    };
++
++    public IdeasAdapter(FragmentActivity activity, View view, List<Idea> ideaList) {
++        this.ideaList = ideaList;
++        this.drawableList = ideaList;
++        this.setActivity(activity);
++        this.setLayoutInflater((LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE));
++        this.setTextNotFound((TextView) view.findViewById(R.id.textNotFound));
++        this.getTextNotFound().setText(R.string.exception_not_found_idea);
++    }
++
++    @Override
++    public int getCount() {
++        return drawableList.size();
++    }
++
++    @Override
++    public Object getItem(int position) {
++        return drawableList.get(position);
++    }
++
++    @Override
++    public long getItemId(int position) {
++        return position;
++    }
++
++    @Override
++    public View getView(int position, View convertView, ViewGroup parent) {
++        Idea item = (Idea) getItem(position);
++        View view = convertView;
++
++        if (view == null) {
++            view = this.getLayoutInflater().inflate(R.layout.listview_item_ideas, parent, false);
++            ImageButton button = (ImageButton) view.findViewById(R.id.menu_item_button);
++            button.setOnClickListener(onClickListener);
++            button.setId(position);
++        }
++        showInformation(view, item);
++        return view;
++    }
++
++    @Override
++    public boolean isEmpty() {
++        boolean empty = drawableList.isEmpty();
++        if (empty) {
++            this.getTextNotFound().setVisibility(View.VISIBLE);
++        } else {
++            this.getTextNotFound().setVisibility(View.GONE);
++        }
++        return empty;
++    }
++
++    @Override
++    public void filter(String search) {
++        if (search.isEmpty()) {
++            drawableList = ideaList;
++            this.getTextNotFound().setText(R.string.exception_not_found_birthday);
++        } else {
++            drawableList = new ArrayList<>();
++            for (Idea idea : ideaList) {
++                if (idea.getHeader().contains(search)) {
++                    drawableList.add(idea);
++                } else if (idea.getIdea().contains(search)) {
++                    drawableList.add(idea);
++                } else if (idea.getKeyword().contains(search)) {
++                    drawableList.add(idea);
++                }
++            }
++        }
++    }
++
++    private void showInformation(View view, Idea item) {
++        TextView textHandler = (TextView) view.findViewById(R.id.textHeader);
++        TextView textIdea = (TextView) view.findViewById(R.id.textIdea);
++        TextView textKeyword = (TextView) view.findViewById(R.id.textKeyword);
++        textHandler.setText(item.getHeader());
++        textIdea.setText(item.getIdea());
++        textKeyword.setText(item.getKeyword());
++    }
++
++    private void showPopupMenu(final View v) {
++        PopupMenu popupMenu = new PopupMenu(this.getActivity(), v);
++        popupMenu.getMenuInflater().inflate(R.menu.menu_listview, popupMenu.getMenu());
++
++        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
++            @Override
++            public boolean onMenuItemClick(MenuItem item) {
++                Idea idea = (Idea) getItem(v.getId());
++                if (item.getItemId() == R.id.menu_item_listview_delete) {
++                    BusProvider.getInstance().post(new IdeasChangeEvent(AbstractData.ELEMENT_DELETE, idea));
++                } else if (item.getItemId() == R.id.menu_item_listview_revise) {
++                    IdeaDialog dialog = new IdeaDialog(IDEA_REVISE, idea);
++                    dialog.show(getActivity().getFragmentManager(), IdeaDialog.TAG);
++                }
++                return true;
++            }
++        });
++        popupMenu.show();
++    }
++
++    public void add(Idea idea) {
++        ideaList.add(idea);
++    }
++
++    public void remove(Idea idea) {
++        ideaList.remove(idea);
++    }
++}
+Index: app/src/main/java/com/myproject/remindme/asynctask/LoadDataBirthdaysAsyncTask.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/myproject/remindme/asynctask/LoadDataBirthdaysAsyncTask.java	(date 1453366587000)
++++ app/src/main/java/com/myproject/remindme/asynctask/LoadDataBirthdaysAsyncTask.java	(date 1453410115000)
+@@ -9,14 +9,14 @@
+ import com.myproject.remindme.R;
+ import com.myproject.remindme.adapter.data.BirthdaysAdapter;
+ import com.myproject.remindme.database.data.Birthday;
+-import com.myproject.remindme.database.handler.BirthdaysDatabaseHandler;
++import com.myproject.remindme.database.handler.DatabaseHandler;
+ 
+ import java.util.List;
+ 
+ /**
+  * Created by Alexey on 1/19/2016.
+  */
+-public class LoadDataBirthdaysAsyncTask extends AsyncTask<BirthdaysDatabaseHandler, Void, BirthdaysAdapter> {
++public class LoadDataBirthdaysAsyncTask extends AsyncTask<DatabaseHandler.BirthdaysTable, Void, BirthdaysAdapter> {
+ 
+     private FragmentActivity activity;
+     private View view;
+@@ -40,8 +40,8 @@
+ 
+     @SuppressWarnings("ResourceType")
+     @Override
+-    protected BirthdaysAdapter doInBackground(BirthdaysDatabaseHandler... params) {
+-        for (BirthdaysDatabaseHandler handler : params) {
++    protected BirthdaysAdapter doInBackground(DatabaseHandler.BirthdaysTable... params) {
++        for (DatabaseHandler.BirthdaysTable handler : params) {
+             List<Birthday> birthdayList = handler.getAll();
+             BirthdaysAdapter adapter = new BirthdaysAdapter(activity, view, birthdayList);
+             listView.setAdapter(adapter);
+Index: app/src/main/java/com/myproject/remindme/asynctask/LoadDataIdeasAsyncTask.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/myproject/remindme/asynctask/LoadDataIdeasAsyncTask.java	(date 1453410115000)
++++ app/src/main/java/com/myproject/remindme/asynctask/LoadDataIdeasAsyncTask.java	(date 1453410115000)
+@@ -0,0 +1,58 @@
++package com.myproject.remindme.asynctask;
++
++import android.os.AsyncTask;
++import android.support.v4.app.FragmentActivity;
++import android.view.View;
++import android.widget.ListView;
++import android.widget.ProgressBar;
++
++import com.myproject.remindme.R;
++import com.myproject.remindme.adapter.data.IdeasAdapter;
++import com.myproject.remindme.database.data.Idea;
++import com.myproject.remindme.database.handler.DatabaseHandler;
++
++import java.util.List;
++
++/**
++ * Created by Alexey on 1/21/2016.
++ */
++public class LoadDataIdeasAsyncTask extends AsyncTask<DatabaseHandler.IdeasTable, Void, IdeasAdapter> {
++
++    private FragmentActivity activity;
++    private View view;
++
++    private ProgressBar progressBar;
++    private ListView listView;
++
++    public LoadDataIdeasAsyncTask(FragmentActivity activity, View view) {
++        this.activity = activity;
++        this.view = view;
++        listView = (ListView) view.findViewById(R.id.listview_ideas);
++        progressBar = (ProgressBar) view.findViewById(R.id.progressBarLoadData);
++    }
++
++    @Override
++    protected void onPreExecute() {
++        super.onPreExecute();
++        progressBar.setVisibility(View.VISIBLE);
++    }
++
++    @SuppressWarnings("ResourceType")
++    @Override
++    protected IdeasAdapter doInBackground(DatabaseHandler.IdeasTable... params) {
++        for (DatabaseHandler.IdeasTable handler : params) {
++            List<Idea> ideaList = handler.getAll();
++            IdeasAdapter adapter = new IdeasAdapter(activity, view, ideaList);
++            listView.setAdapter(adapter);
++            return adapter;
++        }
++        return null;
++    }
++
++    @Override
++    protected void onPostExecute(IdeasAdapter ideasAdapter) {
++        super.onPostExecute(ideasAdapter);
++        ideasAdapter.isEmpty();
++        progressBar.setVisibility(View.GONE);
++    }
++}
+Index: app/src/main/java/com/myproject/remindme/database/data/Idea.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/myproject/remindme/database/data/Idea.java	(date 1453410115000)
++++ app/src/main/java/com/myproject/remindme/database/data/Idea.java	(date 1453410115000)
+@@ -0,0 +1,44 @@
++package com.myproject.remindme.database.data;
++
++import java.util.GregorianCalendar;
++
++/**
++ * Created by Alexey on 1/21/2016.
++ */
++public class Idea extends AbstractData {
++
++    private String header;
++    private String idea;
++    private String keyword;
++
++    public Idea(String header, String idea, String keyword) {
++        this.header = header;
++        this.idea = idea;
++        this.keyword = keyword;
++        this.setDateAdded(new GregorianCalendar());
++    }
++
++    public String getHeader() {
++        return header;
++    }
++
++    public void setHeader(String header) {
++        this.header = header;
++    }
++
++    public String getIdea() {
++        return idea;
++    }
++
++    public void setIdea(String idea) {
++        this.idea = idea;
++    }
++
++    public String getKeyword() {
++        return keyword;
++    }
++
++    public void setKeyword(String keyword) {
++        this.keyword = keyword;
++    }
++}
+Index: app/src/main/java/com/myproject/remindme/database/handler/BirthdaysDatabaseHandler.java
+===================================================================
+--- app/src/main/java/com/myproject/remindme/database/handler/BirthdaysDatabaseHandler.java	(date 1453366587000)
++++ app/src/main/java/com/myproject/remindme/database/handler/BirthdaysDatabaseHandler.java	(date 1453366587000)
+@@ -1,122 +0,0 @@
+-package com.myproject.remindme.database.handler;
+-
+-import android.content.ContentValues;
+-import android.content.Context;
+-import android.database.Cursor;
+-import android.database.sqlite.SQLiteDatabase;
+-import android.database.sqlite.SQLiteOpenHelper;
+-
+-import com.myproject.remindme.Constants;
+-import com.myproject.remindme.database.data.Birthday;
+-
+-import java.util.ArrayList;
+-import java.util.GregorianCalendar;
+-import java.util.List;
+-
+-/**
+- * Created by Alexey on 1/19/2016.
+- */
+-public class BirthdaysDatabaseHandler extends SQLiteOpenHelper {
+-
+-    private static final String TABLE_NAME = "Birthdays";
+-    private static final String KEY_ID = "id";
+-    private static final String KEY_FIRSTNAME = "FirstName";
+-    private static final String KEY_LASTNAME = "LastNAme";
+-    private static final String KEY_BIRTHDAY = "Birthday";
+-    private static final String KEY_RELATIONSHIP = "Relationship";
+-    private static final String KEY_DATEADDED = "Date_Added";
+-
+-    public BirthdaysDatabaseHandler(Context context) {
+-        super(context, Constants.DATABASE_NAME, null, Constants.DATABASE_VERSION);
+-    }
+-
+-    @Override
+-    public void onCreate(SQLiteDatabase db) {
+-        String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
+-                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+-                + KEY_FIRSTNAME + " TEXT NOT NULL, "
+-                + KEY_LASTNAME + " TEXT, "
+-                + KEY_BIRTHDAY + " INT NOT NULL, "
+-                + KEY_RELATIONSHIP + " TEXT NOT NULL, "
+-                + KEY_DATEADDED + " INT NOT NULL)";
+-        db.execSQL(CREATE_TABLE);
+-    }
+-
+-    @Override
+-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+-        onCreate(db);
+-    }
+-
+-    public void add(Birthday birthday) {
+-        SQLiteDatabase database = this.getWritableDatabase();
+-        ContentValues values = new ContentValues();
+-
+-        values.put(KEY_FIRSTNAME, birthday.getFirstName());
+-        values.put(KEY_LASTNAME, birthday.getLastName());
+-        values.put(KEY_BIRTHDAY, birthday.getBirthday().getTimeInMillis());
+-        values.put(KEY_RELATIONSHIP, birthday.getRelationship());
+-        values.put(KEY_DATEADDED, birthday.getDateAdded().getTimeInMillis());
+-
+-        long id = database.insert(TABLE_NAME, null, values);
+-        birthday.setId(id);
+-        database.close();
+-    }
+-
+-    public List<Birthday> getAll() {
+-        List<Birthday> birthdayList = new ArrayList<>();
+-        String selectQuery = "SELECT * FROM " + TABLE_NAME;
+-
+-        SQLiteDatabase database = this.getReadableDatabase();
+-        Cursor cursor = database.rawQuery(selectQuery, null);
+-
+-        if (cursor.moveToFirst()) {
+-            do {
+-                GregorianCalendar calendar = new GregorianCalendar();
+-                calendar.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(KEY_BIRTHDAY)));
+-                Birthday birthday = new Birthday(
+-                        cursor.getString(cursor.getColumnIndex(KEY_FIRSTNAME)),
+-                        cursor.getString(cursor.getColumnIndex(KEY_LASTNAME)),
+-                        calendar,
+-                        cursor.getString(cursor.getColumnIndex(KEY_RELATIONSHIP)));
+-                birthday.setId(cursor.getLong(cursor.getColumnIndex(KEY_ID)));
+-                calendar = new GregorianCalendar();
+-                calendar.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(KEY_DATEADDED)));
+-                birthday.setDateAdded(calendar);
+-                birthdayList.add(birthday);
+-            } while (cursor.moveToNext());
+-        }
+-
+-        database.close();
+-        return birthdayList;
+-    }
+-
+-    public int update(Birthday birthday) {
+-        SQLiteDatabase database = this.getWritableDatabase();
+-
+-        ContentValues values = new ContentValues();
+-        values.put(KEY_FIRSTNAME, birthday.getFirstName());
+-        values.put(KEY_LASTNAME, birthday.getLastName());
+-        values.put(KEY_BIRTHDAY, birthday.getBirthday().getTimeInMillis());
+-        values.put(KEY_RELATIONSHIP, birthday.getRelationship());
+-
+-        int update = database.update(TABLE_NAME, values, KEY_ID + " = ?",
+-                new String[]{String.valueOf(birthday.getId())});
+-
+-        database.close();
+-        return update;
+-    }
+-
+-    public boolean remove(Birthday birthday) {
+-        SQLiteDatabase database = this.getWritableDatabase();
+-        database.delete(TABLE_NAME, KEY_ID + " = ?", new String[]{String.valueOf(birthday.getId())});
+-        database.close();
+-        return false;
+-    }
+-
+-    public void removeAll() {
+-        SQLiteDatabase database = this.getWritableDatabase();
+-        database.delete(TABLE_NAME, null, null);
+-        database.close();
+-    }
+-}
+Index: app/src/main/java/com/myproject/remindme/database/handler/DatabaseHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/myproject/remindme/database/handler/DatabaseHandler.java	(date 1453410115000)
++++ app/src/main/java/com/myproject/remindme/database/handler/DatabaseHandler.java	(date 1453410115000)
+@@ -0,0 +1,236 @@
++package com.myproject.remindme.database.handler;
++
++import android.content.ContentValues;
++import android.content.Context;
++import android.database.Cursor;
++import android.database.sqlite.SQLiteDatabase;
++import android.database.sqlite.SQLiteOpenHelper;
++
++import com.myproject.remindme.Constants;
++import com.myproject.remindme.database.data.Birthday;
++import com.myproject.remindme.database.data.Idea;
++
++import java.util.ArrayList;
++import java.util.GregorianCalendar;
++import java.util.List;
++
++/**
++ * Created by Alexey on 1/19/2016.
++ */
++public class DatabaseHandler extends SQLiteOpenHelper {
++
++    private static DatabaseHandler databaseHandler;
++
++    private DatabaseHandler(Context context) {
++        super(context, Constants.DATABASE_NAME, null, Constants.DATABASE_VERSION);
++    }
++
++    public static DatabaseHandler getInstance(Context context) {
++        if (databaseHandler == null) {
++            databaseHandler = new DatabaseHandler(context);
++        }
++        return databaseHandler;
++    }
++
++    @Override
++    public void onCreate(SQLiteDatabase db) {
++        db.execSQL(IdeasTable.CREATE_TABLE);
++        db.execSQL(BirthdaysTable.CREATE_TABLE);
++    }
++
++    @Override
++    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
++        db.execSQL("DROP TABLE IF EXISTS " + IdeasTable.TABLE_NAME);
++        db.execSQL("DROP TABLE IF EXISTS " + BirthdaysTable.TABLE_NAME);
++        onCreate(db);
++    }
++
++    public IdeasTable getIdeasTable() {
++        return new IdeasTable();
++    }
++
++    public BirthdaysTable getBirthdaysTable() {
++        return new BirthdaysTable();
++    }
++
++    public class IdeasTable {
++
++        private static final String TABLE_NAME = "Ideas";
++        private static final String KEY_ID = "id";
++        private static final String KEY_HANDLER = "Handler";
++        private static final String KEY_IDEA = "Idea";
++        private static final String KEY_KEYWORD = "Keyword";
++        private static final String KEY_DATEADDED = "Date_Added";
++
++        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
++                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
++                + KEY_HANDLER + " TEXT NOT NULL, "
++                + KEY_IDEA + " TEXT NOT NULL, "
++                + KEY_KEYWORD + " TEXT NOT NULL, "
++                + KEY_DATEADDED + " INT NOT NULL)";
++
++        private IdeasTable() {
++        }
++
++        public void add(Idea idea) {
++            SQLiteDatabase database = databaseHandler.getWritableDatabase();
++            ContentValues values = new ContentValues();
++
++            values.put(KEY_HANDLER, idea.getHeader());
++            values.put(KEY_IDEA, idea.getIdea());
++            values.put(KEY_KEYWORD, idea.getKeyword());
++            values.put(KEY_DATEADDED, idea.getDateAdded().getTimeInMillis());
++
++            long id = database.insert(TABLE_NAME, null, values);
++            idea.setId(id);
++            database.close();
++        }
++
++        public List<Idea> getAll() {
++            List<Idea> ideaList = new ArrayList<>();
++            String selectQuery = "SELECT * FROM " + TABLE_NAME;
++
++            SQLiteDatabase database = databaseHandler.getReadableDatabase();
++            Cursor cursor = database.rawQuery(selectQuery, null);
++
++            if (cursor.moveToFirst()) {
++                do {
++                    GregorianCalendar calendar = new GregorianCalendar();
++                    Idea idea = new Idea(
++                            cursor.getString(cursor.getColumnIndex(KEY_HANDLER)),
++                            cursor.getString(cursor.getColumnIndex(KEY_IDEA)),
++                            cursor.getString(cursor.getColumnIndex(KEY_KEYWORD)));
++                    idea.setId(cursor.getLong(cursor.getColumnIndex(KEY_ID)));
++                    calendar.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(KEY_DATEADDED)));
++                    idea.setDateAdded(calendar);
++                    ideaList.add(idea);
++                } while (cursor.moveToNext());
++            }
++
++            database.close();
++            return ideaList;
++        }
++
++        public int update(Idea idea) {
++            SQLiteDatabase database = databaseHandler.getWritableDatabase();
++
++            ContentValues values = new ContentValues();
++            values.put(KEY_HANDLER, idea.getHeader());
++            values.put(KEY_IDEA, idea.getIdea());
++            values.put(KEY_KEYWORD, idea.getKeyword());
++
++            int update = database.update(TABLE_NAME, values, KEY_ID + " = ?",
++                    new String[]{String.valueOf(idea.getId())});
++
++            database.close();
++            return update;
++        }
++
++        public boolean remove(Idea idea) {
++            SQLiteDatabase database = databaseHandler.getWritableDatabase();
++            database.delete(TABLE_NAME, KEY_ID + " = ?", new String[]{String.valueOf(idea.getId())});
++            database.close();
++            return false;
++        }
++
++        public void removeAll() {
++            SQLiteDatabase database = databaseHandler.getWritableDatabase();
++            database.delete(TABLE_NAME, null, null);
++            database.close();
++        }
++    }
++
++    public class BirthdaysTable {
++
++        private static final String TABLE_NAME = "Birthdays";
++        private static final String KEY_ID = "id";
++        private static final String KEY_FIRSTNAME = "FirstName";
++        private static final String KEY_LASTNAME = "LastNAme";
++        private static final String KEY_BIRTHDAY = "Birthday";
++        private static final String KEY_RELATIONSHIP = "Relationship";
++        private static final String KEY_DATEADDED = "Date_Added";
++
++        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "("
++                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
++                + KEY_FIRSTNAME + " TEXT NOT NULL, "
++                + KEY_LASTNAME + " TEXT, "
++                + KEY_BIRTHDAY + " INT NOT NULL, "
++                + KEY_RELATIONSHIP + " TEXT NOT NULL, "
++                + KEY_DATEADDED + " INT NOT NULL)";
++
++        private BirthdaysTable() {
++        }
++
++        public void add(Birthday birthday) {
++            SQLiteDatabase database = databaseHandler.getWritableDatabase();
++            ContentValues values = new ContentValues();
++
++            values.put(KEY_FIRSTNAME, birthday.getFirstName());
++            values.put(KEY_LASTNAME, birthday.getLastName());
++            values.put(KEY_BIRTHDAY, birthday.getBirthday().getTimeInMillis());
++            values.put(KEY_RELATIONSHIP, birthday.getRelationship());
++            values.put(KEY_DATEADDED, birthday.getDateAdded().getTimeInMillis());
++
++            long id = database.insert(TABLE_NAME, null, values);
++            birthday.setId(id);
++            database.close();
++        }
++
++        public List<Birthday> getAll() {
++            List<Birthday> birthdayList = new ArrayList<>();
++            String selectQuery = "SELECT * FROM " + TABLE_NAME;
++
++            SQLiteDatabase database = databaseHandler.getReadableDatabase();
++            Cursor cursor = database.rawQuery(selectQuery, null);
++
++            if (cursor.moveToFirst()) {
++                do {
++                    GregorianCalendar calendar = new GregorianCalendar();
++                    calendar.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(KEY_BIRTHDAY)));
++                    Birthday birthday = new Birthday(
++                            cursor.getString(cursor.getColumnIndex(KEY_FIRSTNAME)),
++                            cursor.getString(cursor.getColumnIndex(KEY_LASTNAME)),
++                            calendar,
++                            cursor.getString(cursor.getColumnIndex(KEY_RELATIONSHIP)));
++                    birthday.setId(cursor.getLong(cursor.getColumnIndex(KEY_ID)));
++                    calendar = new GregorianCalendar();
++                    calendar.setTimeInMillis(cursor.getLong(cursor.getColumnIndex(KEY_DATEADDED)));
++                    birthday.setDateAdded(calendar);
++                    birthdayList.add(birthday);
++                } while (cursor.moveToNext());
++            }
++
++            database.close();
++            return birthdayList;
++        }
++
++        public int update(Birthday birthday) {
++            SQLiteDatabase database = databaseHandler.getWritableDatabase();
++
++            ContentValues values = new ContentValues();
++            values.put(KEY_FIRSTNAME, birthday.getFirstName());
++            values.put(KEY_LASTNAME, birthday.getLastName());
++            values.put(KEY_BIRTHDAY, birthday.getBirthday().getTimeInMillis());
++            values.put(KEY_RELATIONSHIP, birthday.getRelationship());
++
++            int update = database.update(TABLE_NAME, values, KEY_ID + " = ?",
++                    new String[]{String.valueOf(birthday.getId())});
++
++            database.close();
++            return update;
++        }
++
++        public boolean remove(Birthday birthday) {
++            SQLiteDatabase database = databaseHandler.getWritableDatabase();
++            database.delete(TABLE_NAME, KEY_ID + " = ?", new String[]{String.valueOf(birthday.getId())});
++            database.close();
++            return false;
++        }
++
++        public void removeAll() {
++            SQLiteDatabase database = databaseHandler.getWritableDatabase();
++            database.delete(TABLE_NAME, null, null);
++            database.close();
++        }
++    }
++}
+Index: app/src/main/java/com/myproject/remindme/dialog/IdeaDialog.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/myproject/remindme/dialog/IdeaDialog.java	(date 1453410115000)
++++ app/src/main/java/com/myproject/remindme/dialog/IdeaDialog.java	(date 1453410115000)
+@@ -0,0 +1,168 @@
++package com.myproject.remindme.dialog;
++
++import android.annotation.SuppressLint;
++import android.annotation.TargetApi;
++import android.app.AlertDialog;
++import android.app.Dialog;
++import android.app.DialogFragment;
++import android.content.DialogInterface;
++import android.os.Build;
++import android.os.Bundle;
++import android.support.annotation.NonNull;
++import android.support.v7.widget.Toolbar;
++import android.view.LayoutInflater;
++import android.view.View;
++import android.widget.EditText;
++import android.widget.Toast;
++
++import com.myproject.remindme.R;
++import com.myproject.remindme.database.data.AbstractData;
++import com.myproject.remindme.database.data.Idea;
++import com.myproject.remindme.eventbus.BusProvider;
++import com.myproject.remindme.eventbus.IdeasChangeEvent;
++
++/**
++ * Created by Alexey on 1/21/2016.
++ */
++@SuppressLint("ValidFragment")
++public class IdeaDialog extends DialogFragment {
++
++    public final static String TAG = "IdeaDialog";
++    public final static int IDEA_ADD = 1;
++    public final static int IDEA_REVISE = 2;
++
++    private View view;
++    private EditText editHeader;
++    private EditText editIdea;
++    private EditText editKeyword;
++    private Idea idea;
++    private int operation;
++
++    @SuppressLint("ValidFragment")
++    public IdeaDialog(int operation) {
++        this(operation, null);
++    }
++
++    @SuppressLint("ValidFragment")
++    public IdeaDialog(int operation, Idea idea) {
++        this.operation = operation;
++        this.idea = idea;
++        if (operation != IDEA_ADD && operation != IDEA_REVISE) {
++            throw new IllegalArgumentException("Operation not found");
++        }
++        if (operation == IDEA_REVISE && idea == null) {
++            throw new IllegalArgumentException("Element idea is equal to zero");
++        }
++    }
++
++    @NonNull
++    @Override
++    public Dialog onCreateDialog(Bundle savedInstanceState) {
++        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
++        LayoutInflater inflater = getActivity().getLayoutInflater();
++
++        view = inflater.inflate(R.layout.dialog_idea, null);
++
++        initToolBar();
++        initEditHeader();
++        initEditIdea();
++        initEditKeyword();
++
++        builder.setView(view)
++                .setNegativeButton(R.string.button_cancel, null);
++
++        if (operation == IDEA_ADD) {
++            builder.setPositiveButton(R.string.button_add, new DialogInterface.OnClickListener() {
++                @Override
++                public void onClick(DialogInterface dialog, int which) {
++                    onClickIdeaAdd();
++                }
++            });
++        } else if (operation == IDEA_REVISE) {
++            builder.setPositiveButton(R.string.button_revise, new DialogInterface.OnClickListener() {
++                @Override
++                public void onClick(DialogInterface dialog, int which) {
++                    onClickIdeaRevise();
++                }
++            });
++        }
++
++        return builder.create();
++    }
++
++    private void onClickIdeaRevise() {
++        String handler = editHeader.getText().toString();
++        if (isEmpty(handler)) {
++            return;
++        }
++        String idea = editIdea.getText().toString();
++        if (isEmpty(idea)) {
++            return;
++        }
++        String keyword = editKeyword.getText().toString();
++        if (isEmpty(keyword)) {
++            return;
++        }
++        this.idea.setHeader(handler);
++        this.idea.setIdea(idea);
++        this.idea.setKeyword(keyword);
++        BusProvider.getInstance().post(new IdeasChangeEvent(AbstractData.ELEMENT_REVISE, this.idea));
++    }
++
++    private void onClickIdeaAdd() {
++        String handler = editHeader.getText().toString();
++        if (isEmpty(handler)) {
++            return;
++        }
++        String idea = editIdea.getText().toString();
++        if (isEmpty(idea)) {
++            return;
++        }
++        String keyword = editKeyword.getText().toString();
++        if (isEmpty(keyword)) {
++            return;
++        }
++        this.idea = new Idea(handler, idea, keyword);
++        BusProvider.getInstance().post(new IdeasChangeEvent(AbstractData.ELEMENT_ADD, this.idea));
++    }
++
++    private boolean isEmpty(String s) {
++        if (s.isEmpty()) {
++            Toast.makeText(getActivity(), getString(R.string.exception_not_fill_fields), Toast.LENGTH_SHORT).show();
++            return true;
++        }
++        return false;
++    }
++
++    private void initEditHeader() {
++        editHeader = (EditText) view.findViewById(R.id.editHeader);
++        if (operation == IDEA_REVISE) {
++            editHeader.setText(idea.getHeader());
++        }
++    }
++
++    private void initEditIdea() {
++        editIdea = (EditText) view.findViewById(R.id.editIdea);
++        if (operation == IDEA_REVISE) {
++            editIdea.setText(idea.getIdea());
++        }
++    }
++
++    private void initEditKeyword() {
++        editKeyword = (EditText) view.findViewById(R.id.editKeyword);
++        if (operation == IDEA_REVISE) {
++            editKeyword.setText(idea.getKeyword());
++        }
++    }
++
++    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
++    private void initToolBar() {
++        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_idea);
++        toolbar.setNavigationIcon(R.drawable.ic_ideas);
++        if (operation == IDEA_ADD) {
++            toolbar.setTitle(getString(R.string.ideas_add));
++        } else if (operation == IDEA_REVISE) {
++            toolbar.setTitle(getString(R.string.ideas_revise));
++        }
++    }
++}
+Index: app/src/main/java/com/myproject/remindme/eventbus/IdeasChangeEvent.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/myproject/remindme/eventbus/IdeasChangeEvent.java	(date 1453410115000)
++++ app/src/main/java/com/myproject/remindme/eventbus/IdeasChangeEvent.java	(date 1453410115000)
+@@ -0,0 +1,44 @@
++package com.myproject.remindme.eventbus;
++
++import com.myproject.remindme.database.data.Idea;
++
++/**
++ * Created by Alexey on 1/21/2016.
++ */
++public class IdeasChangeEvent {
++
++    /**
++     * Элементы для данного поля находятся в AbstractDAta
++     */
++    private int operation;
++
++    /**
++     * Элемент
++     */
++    private Idea idea;
++
++    private String search;
++
++    public IdeasChangeEvent(int operation, String search) {
++        this.operation = operation;
++        this.search = search;
++        this.idea = null;
++    }
++
++    public IdeasChangeEvent(int operation, Idea idea) {
++        this.operation = operation;
++        this.idea = idea;
++    }
++
++    public int getOperation() {
++        return operation;
++    }
++
++    public Idea getIdea() {
++        return idea;
++    }
++
++    public String getSearch() {
++        return search;
++    }
++}
+Index: app/src/main/java/com/myproject/remindme/fragment/BirthdaysFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/myproject/remindme/fragment/BirthdaysFragment.java	(date 1453366587000)
++++ app/src/main/java/com/myproject/remindme/fragment/BirthdaysFragment.java	(date 1453410115000)
+@@ -15,7 +15,7 @@
+ import com.myproject.remindme.asynctask.SearchChangeDataAsyncTask;
+ import com.myproject.remindme.database.data.AbstractData;
+ import com.myproject.remindme.database.data.Birthday;
+-import com.myproject.remindme.database.handler.BirthdaysDatabaseHandler;
++import com.myproject.remindme.database.handler.DatabaseHandler;
+ import com.myproject.remindme.eventbus.BirthdaysChangeEvent;
+ import com.myproject.remindme.eventbus.BusProvider;
+ import com.squareup.otto.Subscribe;
+@@ -35,7 +35,7 @@
+     private static BirthdaysFragment fragment;
+ 
+     private BirthdaysAdapter adapter;
+-    private BirthdaysDatabaseHandler handler;
++    private DatabaseHandler.BirthdaysTable handler;
+ 
+     public static BirthdaysFragment getInstance(Context context) {
+         if (BirthdaysFragment.fragment == null) {
+@@ -48,11 +48,8 @@
+ 
+     @SuppressLint("ValidFragment")
+     private BirthdaysFragment(Context context) {
+-        handler = new BirthdaysDatabaseHandler(context);
++        handler = DatabaseHandler.getInstance(context).getBirthdaysTable();
+         registrationClassInEventBus();
+-    }
+-
+-    public BirthdaysFragment() {
+     }
+ 
+     @Nullable
+Index: app/src/main/java/com/myproject/remindme/fragment/HistoryFragment.java
+===================================================================
+--- app/src/main/java/com/myproject/remindme/fragment/HistoryFragment.java	(date 1453366587000)
++++ app/src/main/java/com/myproject/remindme/fragment/HistoryFragment.java	(date 1453366587000)
+@@ -1,38 +0,0 @@
+-package com.myproject.remindme.fragment;
+-
+-import android.content.Context;
+-import android.os.Bundle;
+-import android.support.annotation.Nullable;
+-import android.view.LayoutInflater;
+-import android.view.View;
+-import android.view.ViewGroup;
+-
+-import com.myproject.remindme.R;
+-
+-/**
+- * Created by Алексей on 14/01/2016.
+- */
+-public class HistoryFragment extends AbstractTabFragment {
+-
+-    private static final int LAYOUT = R.layout.fragment_history;
+-
+-    public static HistoryFragment getInstance(Context context){
+-        Bundle args = new Bundle();
+-        HistoryFragment fragment = new HistoryFragment();
+-        fragment.setArguments(args);
+-        fragment.setContext(context);
+-        fragment.setTitle(context.getString(R.string.tab_item_history));
+-        return fragment;
+-    }
+-
+-    @Nullable
+-    @Override
+-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+-        view = inflater.inflate(LAYOUT, container, false);
+-        return view;
+-    }
+-
+-    public void setContext(Context context) {
+-        this.context = context;
+-    }
+-}
+Index: app/src/main/java/com/myproject/remindme/fragment/IdeasFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/myproject/remindme/fragment/IdeasFragment.java	(date 1453366587000)
++++ app/src/main/java/com/myproject/remindme/fragment/IdeasFragment.java	(date 1453410115000)
+@@ -1,5 +1,6 @@
+ package com.myproject.remindme.fragment;
+ 
++import android.annotation.SuppressLint;
+ import android.content.Context;
+ import android.os.Bundle;
+ import android.support.annotation.Nullable;
+@@ -8,31 +9,97 @@
+ import android.view.ViewGroup;
+ 
+ import com.myproject.remindme.R;
++import com.myproject.remindme.adapter.data.IdeasAdapter;
++import com.myproject.remindme.asynctask.ChangeDataAsyncTask;
++import com.myproject.remindme.asynctask.LoadDataIdeasAsyncTask;
++import com.myproject.remindme.asynctask.SearchChangeDataAsyncTask;
++import com.myproject.remindme.database.data.AbstractData;
++import com.myproject.remindme.database.data.Idea;
++import com.myproject.remindme.database.handler.DatabaseHandler;
++import com.myproject.remindme.eventbus.BusProvider;
++import com.myproject.remindme.eventbus.IdeasChangeEvent;
++import com.squareup.otto.Subscribe;
+ 
++import java.util.concurrent.ExecutionException;
++import java.util.concurrent.TimeUnit;
++import java.util.concurrent.TimeoutException;
++
+ /**
+  * Created by Алексей on 14/01/2016.
+  */
++@SuppressLint("ValidFragment")
+ public class IdeasFragment extends AbstractTabFragment {
+ 
+     private static final int LAYOUT = R.layout.fragment_ideas;
+ 
++    private static IdeasFragment fragment;
++
++    private IdeasAdapter adapter;
++    private DatabaseHandler.IdeasTable handler;
++
+     public static IdeasFragment getInstance(Context context){
+-        Bundle args = new Bundle();
+-        IdeasFragment fragment = new IdeasFragment();
+-        fragment.setArguments(args);
+-        fragment.setContext(context);
++        if(IdeasFragment.fragment == null){
++            fragment = new IdeasFragment(context);
+-        fragment.setTitle(context.getString(R.string.tab_item_ideas));
++            fragment.setTitle(context.getString(R.string.tab_item_ideas));
++        }
++        fragment.setContext(context);
+         return fragment;
+     }
+ 
++    @SuppressLint("ValidFragment")
++    private IdeasFragment(Context context){
++        handler = DatabaseHandler.getInstance(context).getIdeasTable();
++        registrationClassInEventBus();
++    }
++
+     @Nullable
+     @Override
+     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+         view = inflater.inflate(LAYOUT, container, false);
++        initListView();
+         return view;
+     }
+ 
++    @Subscribe
++    public void onIdeasChange(IdeasChangeEvent event) {
++        Idea idea = event.getIdea();
++        ChangeDataAsyncTask changeData = new ChangeDataAsyncTask(view);
++        if (event.getOperation() == AbstractData.ELEMENT_DELETE) {
++            handler.remove(idea);
++            adapter.remove(idea);
++            changeData.execute(adapter);
++        } else if (event.getOperation() == AbstractData.ELEMENT_ADD) {
++            handler.add(idea);
++            adapter.add(idea);
++            changeData.execute(adapter);
++        } else if (event.getOperation() == AbstractData.ELEMENT_REVISE) {
++            handler.update(idea);
++            changeData.execute(adapter);
++        } else if (event.getOperation() == AbstractData.ELEMENT_SEARCH) {
++            SearchChangeDataAsyncTask searchChangeData = new SearchChangeDataAsyncTask(view, event.getSearch());
++            searchChangeData.execute(adapter);
++        }
++    }
++
++    private void initListView() {
++        LoadDataIdeasAsyncTask loadData = new LoadDataIdeasAsyncTask(getActivity(), view);
++        loadData.execute(handler);
++        try {
++            adapter = loadData.get(5, TimeUnit.MINUTES);
++        } catch (InterruptedException e) {
++            e.printStackTrace();
++        } catch (TimeoutException e) {
++            e.printStackTrace();
++        } catch (ExecutionException e) {
++            e.printStackTrace();
++        }
++    }
++
+     public void setContext(Context context) {
+         this.context = context;
++    }
++
++    private void registrationClassInEventBus() {
++        BusProvider.getInstance().register(this);
+     }
+ }
+Index: app/src/main/res/layout/dialog_idea.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/dialog_idea.xml	(date 1453410115000)
++++ app/src/main/res/layout/dialog_idea.xml	(date 1453410115000)
+@@ -0,0 +1,68 @@
++<?xml version="1.0" encoding="utf-8"?>
++<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="wrap_content"
++    android:orientation="vertical"
++    tools:context="com.myproject.remindme.activity.AddBirthdayActivity">
++
++    <android.support.v7.widget.Toolbar
++        android:id="@+id/toolbar_idea"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:layout_marginBottom="@dimen/add_item_marginBottom"
++        android:background="@color/colorIdeas" />
++
++    <android.support.design.widget.TextInputLayout
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content">
++
++        <EditText
++            android:id="@+id/editHeader"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:layout_marginLeft="@dimen/add_item_marginLeft"
++            android:layout_marginRight="@dimen/add_item_marginRight"
++            android:layout_marginTop="@dimen/add_item_marginTop"
++            android:ems="10"
++            android:hint="@string/header"
++            android:inputType="textPersonName" />
++
++    </android.support.design.widget.TextInputLayout>
++
++    <android.support.design.widget.TextInputLayout
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content">
++
++        <EditText
++            android:id="@+id/editIdea"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:layout_marginLeft="@dimen/add_item_marginLeft"
++            android:layout_marginRight="@dimen/add_item_marginRight"
++            android:layout_marginTop="@dimen/add_item_marginTop"
++            android:ems="10"
++            android:maxLength="255"
++            android:hint="@string/idea"
++            android:inputType="textMultiLine" />
++
++    </android.support.design.widget.TextInputLayout>
++
++    <android.support.design.widget.TextInputLayout
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content">
++
++        <EditText
++            android:id="@+id/editKeyword"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:layout_marginLeft="@dimen/add_item_marginLeft"
++            android:layout_marginRight="@dimen/add_item_marginRight"
++            android:layout_marginTop="@dimen/add_item_marginTop"
++            android:ems="10"
++            android:hint="@string/keyword"
++            android:inputType="textPersonName" />
++
++    </android.support.design.widget.TextInputLayout>
++
++</LinearLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/dropdown_item.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/dropdown_item.xml	(date 1453366587000)
++++ app/src/main/res/layout/dropdown_item.xml	(date 1453410115000)
+@@ -2,5 +2,5 @@
+ <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+-    android:layout_margin="@dimen/listview_item_margin"
+-    android:padding="@dimen/listview_item_margin" />
++    android:layout_margin="@dimen/listview_item_padding"
++    android:padding="@dimen/listview_item_padding" />
+Index: app/src/main/res/layout/fragment_ideas.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/fragment_ideas.xml	(date 1453366587000)
++++ app/src/main/res/layout/fragment_ideas.xml	(date 1453410115000)
+@@ -1,11 +1,15 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:orientation="vertical" android:layout_width="match_parent"
+     android:layout_height="match_parent">
+ 
+-    <TextView
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:text="@string/tab_item_ideas"/>
++    <ListView
++        android:id="@+id/listview_ideas"
++        android:layout_width="match_parent"
++        android:layout_height="match_parent" />
+ 
+-</LinearLayout>
+\ No newline at end of file
++    <include layout="@layout/text_not_found" />
++
++    <include layout="@layout/progressbar" />
++
++</RelativeLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/listview_item_birthdays.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/listview_item_birthdays.xml	(date 1453366587000)
++++ app/src/main/res/layout/listview_item_birthdays.xml	(date 1453410115000)
+@@ -1,72 +1,86 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+-    android:layout_height="@dimen/listviewBirthdays_item_height"
++    android:layout_height="wrap_content"
+     android:orientation="vertical"
+-    android:padding="@dimen/listview_item_margin"
+-    >
++    android:padding="@dimen/listview_item_padding">
+ 
++    <LinearLayout
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:background="@color/colorWhite"
++        android:orientation="vertical">
++
+-    <RelativeLayout
+-        android:layout_width="match_parent"
++        <RelativeLayout
++            android:layout_width="match_parent"
+-        android:layout_height="match_parent"
+-        android:background="@color/colorWhite">
++            android:layout_height="wrap_content">
+ 
+-        <include
+-            layout="@layout/listview_item_header"/>
++            <include layout="@layout/listview_item_header" />
+ 
+-        <include
+-            layout="@layout/listview_item_buttonmenu"/>
++            <include layout="@layout/listview_item_buttonmenu" />
+ 
++        </RelativeLayout>
++
++        <RelativeLayout
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:layout_marginTop="@dimen/listview_item_margin"
++            android:layout_marginLeft="@dimen/listview_item_marginLeft"
++            android:layout_marginRight="@dimen/listview_item_marginRight"
++            android:background="@color/colorWhite">
++
+-        <TextView
+-            android:id="@+id/textBirthdaysDate"
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:layout_alignParentLeft="true"
++            <TextView
++                android:id="@+id/textBirthdaysDate"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_alignParentLeft="true"
+-            android:layout_alignParentTop="true"
+-            android:layout_marginLeft="@dimen/listview_item_marginLeft"
+-            android:layout_marginTop="@dimen/listviewBirthdays_item_date_marginTop"
++                android:maxLength="20"
++                android:maxLines="1"
+-            android:text="Date"
+-            android:textAppearance="?android:attr/textAppearanceMedium"
++                android:text="Date"
++                android:textAppearance="?android:attr/textAppearanceMedium"
+-            android:textSize="@dimen/listviewBirthdays_item_dateSize" />
++                android:textSize="@dimen/listview_item_textSize" />
+ 
+-        <TextView
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:layout_alignParentRight="true"
+-            android:layout_alignParentTop="true"
++            <TextView
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_alignParentRight="true"
++                android:layout_alignParentTop="true"
+-            android:layout_marginRight="@dimen/listview_item_marginRight"
+-            android:layout_marginTop="@dimen/listviewBirthdays_item_date_marginTop"
+-            android:text="Birthdays"
++                android:text="@string/tab_item_birthdays"
+-            android:textAppearance="?android:attr/textAppearanceMedium"
+-            android:textColor="@color/colorBirthdaysDark"
++                android:textAppearance="?android:attr/textAppearanceMedium"
++                android:textColor="@color/colorBirthdaysDark"
+-            android:textSize="@dimen/listviewBirthdays_item_dateSize" />
++                android:textSize="@dimen/listview_item_textSize" />
+ 
++        </RelativeLayout>
++
+         <View
+             android:layout_width="match_parent"
+             android:layout_height="@dimen/listview_item_line_height"
+-            android:layout_marginTop="@dimen/listview_item_line_marginTop"
++            android:layout_marginTop="@dimen/listview_item_margin"
+             android:background="@color/colorGrey" />
+ 
+         <RelativeLayout
+             android:layout_width="@dimen/listview_item_block_width"
+             android:layout_height="@dimen/listview_item_block_height"
+-            android:layout_marginTop="@dimen/listview_item_block_marginTop"
++            android:layout_marginBottom="@dimen/listview_item_margin"
+             android:layout_marginLeft="@dimen/listview_item_marginLeft"
++            android:layout_marginTop="@dimen/listview_item_margin"
++            android:layout_marginRight="@dimen/listview_item_marginRight"
+             android:background="@color/colorBirthdays">
+ 
+             <TextView
+                 android:id="@+id/textRelationship"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
++                android:layout_centerHorizontal="true"
++                android:layout_centerVertical="true"
+                 android:text="Relationship"
++                android:maxLines="1"
+                 android:textAppearance="?android:attr/textAppearanceMedium"
+                 android:textColor="@color/colorBirthdaysDark"
+-                android:textSize="@dimen/listviewBirthdays_item_dateSize"
+-                android:layout_centerVertical="true"
+-                android:layout_centerHorizontal="true" />
++                android:textSize="@dimen/listview_item_textSize" />
+ 
+         </RelativeLayout>
+ 
+-    </RelativeLayout>
++    </LinearLayout>
+ 
+ </LinearLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/listview_item_ideas.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/listview_item_ideas.xml	(date 1453410115000)
++++ app/src/main/res/layout/listview_item_ideas.xml	(date 1453410115000)
+@@ -0,0 +1,83 @@
++<?xml version="1.0" encoding="utf-8"?>
++<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    android:layout_width="match_parent"
++    android:layout_height="wrap_content"
++    android:orientation="vertical"
++    android:padding="@dimen/listview_item_padding">
++
++    <LinearLayout
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:background="@color/colorWhite"
++        android:orientation="vertical">
++
++        <RelativeLayout
++            android:layout_width="match_parent"
++            android:layout_height="match_parent">
++
++            <include layout="@layout/listview_item_header" />
++
++            <include layout="@layout/listview_item_buttonmenu" />
++
++        </RelativeLayout>
++
++
++        <RelativeLayout
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:layout_marginLeft="@dimen/listview_item_marginLeft"
++            android:layout_marginRight="@dimen/listview_item_marginRight"
++            android:layout_marginTop="@dimen/listview_item_margin">
++
++            <TextView
++                android:id="@+id/textIdea"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_marginRight="70dp"
++                android:maxLines="3"
++                android:text="Idea"
++                android:textAppearance="?android:attr/textAppearanceMedium"
++                android:textSize="@dimen/listview_item_textSize" />
++
++            <TextView
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_alignParentRight="true"
++                android:text="@string/tab_item_ideas"
++                android:textAppearance="?android:attr/textAppearanceMedium"
++                android:textColor="@color/colorIdeasDark"
++                android:textSize="@dimen/listview_item_textSize" />
++
++        </RelativeLayout>
++
++
++        <View
++            android:layout_width="match_parent"
++            android:layout_height="@dimen/listview_item_line_height"
++            android:layout_marginTop="@dimen/listview_item_margin"
++            android:background="@color/colorGrey" />
++
++        <RelativeLayout
++            android:layout_width="@dimen/listview_item_block_width"
++            android:layout_height="@dimen/listview_item_block_height"
++            android:layout_marginBottom="@dimen/listview_item_margin"
++            android:layout_marginLeft="@dimen/listview_item_marginLeft"
++            android:layout_marginTop="@dimen/listview_item_margin"
++            android:background="@color/colorIdeas">
++
++            <TextView
++                android:id="@+id/textKeyword"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_centerHorizontal="true"
++                android:layout_centerVertical="true"
++                android:text="Keyword"
++                android:textAppearance="?android:attr/textAppearanceMedium"
++                android:textColor="@color/colorIdeasDark"
++                android:textSize="@dimen/listview_item_textSize" />
++
++        </RelativeLayout>
++
++    </LinearLayout>
++
++</LinearLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/text_not_found.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/text_not_found.xml	(date 1453366587000)
++++ app/src/main/res/layout/text_not_found.xml	(date 1453410115000)
+@@ -11,5 +11,4 @@
+     android:text="Error!"
+     android:textAppearance="?android:attr/textAppearanceLarge"
+     android:typeface="serif"
+-    android:alpha="0.5"
+-    android:visibility="gone"/>
+\ No newline at end of file
++    android:alpha="0.5"/>
+\ No newline at end of file
+Index: app/src/main/res/values/dimens.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/values/dimens.xml	(date 1453366587000)
++++ app/src/main/res/values/dimens.xml	(date 1453410115000)
+@@ -5,35 +5,25 @@
+ 
+     <dimen name="fab_margin">16dp</dimen>
+ 
+-    <dimen name="listview_item_margin">8dp</dimen>
++    <dimen name="listview_item_padding">8dp</dimen>
+     <dimen name="listview_item_marginLeft">24dp</dimen>
+     <dimen name="listview_item_marginTop">24dp</dimen>
+     <dimen name="listview_item_marginRight">24dp</dimen>
+     <dimen name="listview_item_marginBottom">24dp</dimen>
++    <dimen name="listview_item_margin">10dp</dimen>
+ 
+     <dimen name="listview_item_headerSize">18dp</dimen>
++    <dimen name="listview_item_textSize">14dp</dimen>
+ 
+-    <dimen name="listview_item_line_height">1dp</dimen>
+-    <dimen name="listview_item_line_marginTop">85dp</dimen>
+-
+-    <dimen name="listview_item_menu_marginRight">14dp</dimen>
+-
+-    <dimen name="listview_item_block_marginTop">100dp</dimen>
+     <dimen name="listview_item_block_height">25dp</dimen>
+     <dimen name="listview_item_block_width">100dp</dimen>
+ 
+-    <dimen name="listviewBirthdays_item_height">155dp</dimen>
+-    <dimen name="listviewBirthdays_item_date_marginTop">55dp</dimen>
+-    <dimen name="listviewBirthdays_item_dateSize">14dp</dimen>
++    <dimen name="listview_item_menu_marginRight">14dp</dimen>
+ 
+-    <dimen name="fragment_addbirthdays_width">250dp</dimen>
+-    <dimen name="fragment_addbirthdays_height">320dp</dimen>
++    <dimen name="listview_item_line_height">1dp</dimen>
+ 
+-
+     <dimen name="add_item_marginTop">10dp</dimen>
+     <dimen name="add_item_marginRight">10dp</dimen>
+     <dimen name="add_item_marginBottom">10dp</dimen>
+     <dimen name="add_item_marginLeft">10dp</dimen>
+-
+-    <dimen name="textview_personal_width">100dp</dimen>
+ </resources>
+Index: app/src/main/res/values/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/values/strings.xml	(date 1453366587000)
++++ app/src/main/res/values/strings.xml	(date 1453410115000)
+@@ -7,14 +7,42 @@
+     <string name="view_navigation_open">Open</string>
+     <string name="view_navigation_close">Close</string>
+ 
++    <!-- Tabs-->
+     <string name="tab_item_history">History</string>
+     <string name="tab_item_ideas">Ideas</string>
+     <string name="tab_item_todo">TODO</string>
+     <string name="tab_item_birthdays">Birthdays</string>
++    <!---->
+ 
++    <!-- Popup menu items-->
+     <string name="listview_item_menu_delete">Delete</string>
+     <string name="listview_item_menu_revise">Revise</string>
++    <!---->
+ 
++    <!-- Button dialog-->
++    <string name="button_add">Add</string>
++    <string name="button_revise">Revise</string>
++    <string name="button_cancel">Cancel</string>
++    <!---->
++
++    <!-- Exception-->
++    <string name="exception_unfinished_business">Finish filling data</string>
++    <string name="exception_not_fill_fields">You did not fill in all fields!</string>
++    <string name="exception_not_found_birthday">Add a birthday by clicking on the plus</string>
++    <string name="exception_not_found_idea">Add a idea by clicking on the plus</string>
++    <string name="exception_search_not_found">No search results</string>
++    <!-- -->
++
++    <!-- Idea-->
++    <string name="ideas_add">New Idea</string>
++    <string name="ideas_revise">Revise Idea</string>
++
++    <string name="header">Header</string>
++    <string name="idea">Idea</string>
++    <string name="keyword">Keyword</string>
++    <!-- -->
++
++    <!--Birthday -->
+     <string name="birthdays_add">New Birthday</string>
+     <string name="birthdays_revise">Revise Birthday</string>
+ 
+@@ -24,19 +52,12 @@
+     <string name="relationship">Relationship</string>
+ 
+     <string-array name="relationship_items">
++        <item>My</item>
+         <item>Family</item>
+         <item>Business</item>
+         <item>Friend</item>
+         <item>Familiar</item>
+     </string-array>
+-
+-    <string name="button_add">Add</string>
+-    <string name="button_revise">Revise</string>
+-    <string name="button_cancel">Cancel</string>
+-
+-    <string name="exception_unfinished_business">Finish filling data</string>
+-    <string name="exception_not_fill_fields">You did not fill in all fields!</string>
+-    <string name="exception_not_found_birthday">Add a birthday by clicking on the plus</string>
+-    <string name="exception_search_not_found">No search results</string>
++    <!---->
+ 
+ </resources>

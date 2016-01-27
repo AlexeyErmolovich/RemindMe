@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="com.myproject.remindme.activity.AddBirthdayActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_idea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/add_item_marginBottom"
+        android:background="@color/colorIdeas" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/editHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/add_item_marginLeft"
+            android:layout_marginRight="@dimen/add_item_marginRight"
+            android:layout_marginTop="@dimen/add_item_marginTop"
+            android:ems="10"
+            android:hint="@string/header"
+            android:inputType="textPersonName" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/editIdea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/add_item_marginLeft"
+            android:layout_marginRight="@dimen/add_item_marginRight"
+            android:layout_marginTop="@dimen/add_item_marginTop"
+            android:ems="10"
+            android:hint="@string/idea"
+            android:inputType="textMultiLine"
+            android:maxLength="255" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/editKeyword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/add_item_marginLeft"
+            android:layout_marginRight="@dimen/add_item_marginRight"
+            android:layout_marginTop="@dimen/add_item_marginTop"
+            android:ems="10"
+            android:hint="@string/keyword"
+            android:inputType="textPersonName" />
+
+    </android.support.design.widget.TextInputLayout>
+
+</LinearLayout>
