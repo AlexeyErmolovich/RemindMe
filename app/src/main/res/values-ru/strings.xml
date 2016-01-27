@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">RemindMe</string>
+    <string name="birthday">День Рождения</string>
+    <string name="birthdays_add">Новое Поздравление</string>
+    <string name="birthdays_revise">Изменить Поздравление</string>
+    <string name="button_add">Добавить</string>
+    <string name="button_cancel">Отмена</string>
+    <string name="button_revise">Изменить</string>
+    <string name="congratulation">Сегодня День Рождения у</string>
+    <string name="exception_not_fill_fields">Вы  не заолнили все поля!</string>
+    <string name="exception_not_found_birthday">Чтобы добавить Поздравление, нажмите на плюс.</string>
+    <string name="exception_not_found_idea">Чтобы добавить Заметку, нажмите на плюс.</string>
+    <string name="exception_not_found_todo">Чтобы добавить Действие, нажмите на плюс.</string>
+    <string name="exception_search_not_found">Поиск не дал результата</string>
+    <string name="exception_unfinished_business">Закончите заполнение данных</string>
+    <string name="first_name">Имя</string>
+    <string name="header">Заголовок</string>
+    <string name="idea">Заметка</string>
+    <string name="ideas_add">Новая Заметка</string>
+    <string name="ideas_revise">Изменение Заметки</string>
+    <string name="keyword">Ключевое слово</string>
+    <string name="large_name">Фамилия</string>
+    <string name="listview_item_menu_delete">Удалить</string>
+    <string name="listview_item_menu_revise">Изменить</string>
+    <string name="menu_item_notification">Напоминания</string>
+    <string name="menu_search">Поиск</string>
+    <string name="notification">Не забудьте поздравить!</string>
+    <string name="relationship">Отношения</string>
+    <string name="tab_item_birthdays">Праздники</string>
+    <string name="tab_item_history">История</string>
+    <string name="tab_item_ideas">Заметки</string>
+    <string name="tab_item_todo">Действия</string>
+    <string name="todo">Действие</string>
+    <string name="todo_add">Новое Действие</string>
+    <string name="todo_revise">Изменить Действие</string>
+    <string name="view_navigation_close">Закрыть</string>
+    <string name="view_navigation_open">Открыть</string>
+</resources>

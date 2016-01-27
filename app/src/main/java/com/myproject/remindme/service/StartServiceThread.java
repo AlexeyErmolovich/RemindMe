@@ -50,8 +50,8 @@ public class StartServiceThread extends Thread {
             GregorianCalendar calendar = new GregorianCalendar();
             calendar.set(Calendar.DAY_OF_MONTH, birthday.getBirthday().get(Calendar.DAY_OF_MONTH));
             calendar.set(Calendar.MONTH, birthday.getBirthday().get(Calendar.MONTH));
-            calendar.set(Calendar.HOUR, 8);
-            calendar.set(Calendar.MINUTE, 53);
+            calendar.set(Calendar.HOUR, 12);
+            calendar.set(Calendar.MINUTE, 0);
             Log.i(birthday.getLastName(), birthday.getBirthdayString());
 
             long timeInMillis = calendar.getTimeInMillis();
