@@ -17,13 +17,12 @@ import java.util.List;
  */
 public abstract class AbstractAdapter<T extends Object> extends BaseAdapter {
 
-    private int layout;
-
-    protected LayoutInflater layoutInflater;
-    protected FragmentActivity activity;
-    protected TextView textNotFound;
     protected List<T> dataList;
     protected List<T> drawableList;
+    protected TextView textNotFound;
+    protected LayoutInflater layoutInflater;
+    protected FragmentActivity activity;
+    private int layout;
     protected View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -91,9 +90,5 @@ public abstract class AbstractAdapter<T extends Object> extends BaseAdapter {
 
     public void remove(T object) {
         dataList.remove(object);
-    }
-
-    public List<T> getDataList() {
-        return this.dataList;
     }
 }

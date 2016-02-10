@@ -61,7 +61,7 @@ public class TodoItemAdapter extends BaseAdapter {
         View view = convertView;
         final Todo.TodoItem todoItem = (Todo.TodoItem) getItem(position);
         if (view == null) {
-            view = layoutInflater.inflate(R.layout.listview_item_todo_items, parent, false);
+            view = layoutInflater.inflate(R.layout.todoitems_item, parent, false);
             ImageButton button = (ImageButton) view.findViewById(R.id.todo_item_delete);
             button.setId(position);
             button.setOnClickListener(new View.OnClickListener() {

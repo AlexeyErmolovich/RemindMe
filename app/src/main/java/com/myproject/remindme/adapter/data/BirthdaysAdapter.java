@@ -30,7 +30,7 @@ public class BirthdaysAdapter extends AbstractAdapter<Birthday> {
         this.layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.textNotFound = (TextView) view.findViewById(R.id.textNotFound);
         this.textNotFound.setText(R.string.exception_not_found_birthday);
-        this.setLayout(R.layout.listview_item_birthdays);
+        this.setLayout(R.layout.birthdays_item);
     }
 
     @Override

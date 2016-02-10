@@ -30,7 +30,7 @@ public class TodoAdapter extends AbstractAdapter<Todo> {
         this.layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.textNotFound = (TextView) view.findViewById(R.id.textNotFound);
         this.textNotFound.setText(R.string.exception_not_found_todo);
-        this.setLayout(R.layout.listview_item_todo);
+        this.setLayout(R.layout.todo_item);
     }
 
     @Override

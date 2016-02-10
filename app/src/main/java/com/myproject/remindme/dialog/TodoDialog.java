@@ -119,12 +119,12 @@ public class TodoDialog extends DialogFragment {
 
     private void onClickTodoRevise() {
         String handler = editHeader.getText().toString();
-        if (isEmpty(handler)) {
-            return;
+        if (handler.isEmpty()) {
+            handler = getString(R.string.todo_add);
         }
         String keyword = editKeyword.getText().toString();
-        if (isEmpty(keyword)) {
-            return;
+        if (keyword.isEmpty()) {
+            keyword = getString(R.string.todo);
         }
         if (adapter.getCount() == 0) {
             isEmpty("");
@@ -142,12 +142,12 @@ public class TodoDialog extends DialogFragment {
 
     private void onClickTodoAdd() {
         String handler = editHeader.getText().toString();
-        if (isEmpty(handler)) {
-            return;
+        if (handler.isEmpty()) {
+            handler = getString(R.string.todo_add); 
         }
         String keyword = editKeyword.getText().toString();
-        if (isEmpty(keyword)) {
-            return;
+        if (keyword.isEmpty()) {
+            keyword = getString(R.string.todo);
         }
         this.todo = new Todo(handler, keyword);
         if (adapter.getCount() == 0) {

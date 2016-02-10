@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">RemindMe</string>
+    <string name="email_developer">alexeyermolovich@gmail.com</string>
+
     <string name="menu_search">Search</string>
 
     <string name="menu_item_notification">Notifications</string>
@@ -71,5 +73,5 @@
 
     <string name="congratulation">Today is Birthdays </string>
     <string name="notification">Do not forget to congratulate.</string>
-    
+
 </resources>

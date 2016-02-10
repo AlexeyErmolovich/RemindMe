@@ -48,6 +48,7 @@ public class StartServiceThread extends Thread {
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REQUEST_CODE, intent, 0);
 
             GregorianCalendar calendar = new GregorianCalendar();
+            long currentTime = calendar.getTimeInMillis();
             calendar.set(Calendar.DAY_OF_MONTH, birthday.getBirthday().get(Calendar.DAY_OF_MONTH));
             calendar.set(Calendar.MONTH, birthday.getBirthday().get(Calendar.MONTH));
             calendar.set(Calendar.HOUR, 12);
@@ -55,12 +56,14 @@ public class StartServiceThread extends Thread {
             Log.i(birthday.getLastName(), birthday.getBirthdayString());
 
             long timeInMillis = calendar.getTimeInMillis();
-            alarmManager.set(
-                    AlarmManager.RTC_WAKEUP,
-                    timeInMillis,
-                    pendingIntent);
 
-            break;
+            if(timeInMillis>currentTime) {
+                alarmManager.set(
+                        AlarmManager.RTC_WAKEUP,
+                        timeInMillis,
+                        pendingIntent);
+                break;
+            }
         }
     }
 

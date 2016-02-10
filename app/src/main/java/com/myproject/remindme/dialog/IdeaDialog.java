@@ -92,16 +92,16 @@ public class IdeaDialog extends DialogFragment {
 
     private void onClickIdeaRevise() {
         String handler = editHeader.getText().toString();
-        if (isEmpty(handler)) {
-            return;
+        if (handler.isEmpty()) {
+            handler = getString(R.string.ideas_add);
         }
         String idea = editIdea.getText().toString();
         if (isEmpty(idea)) {
             return;
         }
         String keyword = editKeyword.getText().toString();
-        if (isEmpty(keyword)) {
-            return;
+        if (keyword.isEmpty()) {
+            keyword = getString(R.string.idea);
         }
         this.idea.setHeader(handler);
         this.idea.setIdea(idea);
@@ -111,16 +111,16 @@ public class IdeaDialog extends DialogFragment {
 
     private void onClickIdeaAdd() {
         String handler = editHeader.getText().toString();
-        if (isEmpty(handler)) {
-            return;
+        if (handler.isEmpty()) {
+            handler = getString(R.string.ideas_add);
         }
         String idea = editIdea.getText().toString();
         if (isEmpty(idea)) {
             return;
         }
         String keyword = editKeyword.getText().toString();
-        if (isEmpty(keyword)) {
-            return;
+        if (keyword.isEmpty()) {
+            keyword = getString(R.string.idea);
         }
         this.idea = new Idea(handler, idea, keyword);
         BusProvider.getInstance().post(new IdeasChangeEvent(AbstractData.ELEMENT_ADD, this.idea));

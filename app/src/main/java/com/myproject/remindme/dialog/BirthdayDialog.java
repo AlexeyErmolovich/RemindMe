@@ -111,8 +111,8 @@ public class BirthdayDialog extends DialogFragment {
             return;
         }
         String sRelationship = editRelationship.getText().toString();
-        if (isEmpty(sRelationship)) {
-            return;
+        if (sRelationship.isEmpty()) {
+            sRelationship = getString(R.string.birthday);
         }
         birthday.setFirstName(sFirstName);
         birthday.setLastName(sLargeName);
@@ -132,8 +132,8 @@ public class BirthdayDialog extends DialogFragment {
             return;
         }
         String sRelationship = editRelationship.getText().toString();
-        if (isEmpty(sRelationship)) {
-            return;
+        if (sRelationship.isEmpty()) {
+            sRelationship = getString(R.string.birthday);
         }
         birthday = new Birthday(sFirstName, sLargeName, calendar, sRelationship);
         BusProvider.getInstance().post(new BirthdaysChangeEvent(AbstractData.ELEMENT_ADD, birthday));

@@ -5,22 +5,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
-import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.myproject.remindme.adapter.TabsPagerFragmentAdapter;
 import com.myproject.remindme.database.data.AbstractData;
 import com.myproject.remindme.dialog.BirthdayDialog;
@@ -43,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     public static final int TAB_BIRTHDAYS = 2;
 
     private Toolbar toolbar;
-    private Drawer.Result resultDrawer;
     private ViewPager viewPager;
     private FloatingActionMenu actionsMenu;
 
@@ -55,18 +46,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(LAYOUT);
 
         initToolBar();
-//        initNavigationView();
+
         initTabs();
         initActionMenu();
     }
 
     @Override
     public void onBackPressed() {
-        if(resultDrawer.isDrawerOpen()){
-            resultDrawer.closeDrawer();
-        }else {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
     }
 
     private void initActionMenu() {

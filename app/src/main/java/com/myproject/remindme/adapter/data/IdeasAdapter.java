@@ -6,8 +6,6 @@ import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.myproject.remindme.R;
@@ -34,7 +32,7 @@ public class IdeasAdapter extends AbstractAdapter<Idea> {
         this.layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.textNotFound = (TextView) view.findViewById(R.id.textNotFound);
         this.textNotFound.setText(R.string.exception_not_found_idea);
-        this.setLayout(R.layout.listview_item_ideas);
+        this.setLayout(R.layout.ideas_item);
     }
 
     @Override

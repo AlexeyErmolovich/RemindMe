@@ -24,11 +24,10 @@ public class LoadDataBirthdaysAsyncTask extends AsyncTask<DatabaseHandler.Birthd
     private ProgressBar progressBar;
     private ListView listView;
 
-
     public LoadDataBirthdaysAsyncTask(FragmentActivity activity, View view) {
         this.activity = activity;
         this.view = view;
-        listView = (ListView) view.findViewById(R.id.listview_birthdays);
+        listView = (ListView) view.findViewById(R.id.listView_birthdays);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBarLoadData);
     }
 
